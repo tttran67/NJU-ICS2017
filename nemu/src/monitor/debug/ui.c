@@ -38,6 +38,8 @@ static int cmd_q(char *args) {
 
 static int cmd_help(char *args);
 
+static int cmd_si(char *args); // single step debug
+
 static struct {
   char *name;
   char *description;
@@ -48,6 +50,7 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
 
   /* TODO: Add more commands */
+  {"si", "Single-step debug", cmd_si}
 
 };
 
@@ -74,6 +77,24 @@ static int cmd_help(char *args) {
     printf("Unknown command '%s'\n", arg);
   }
   return 0;
+}
+
+static int cmd_si(char* args){
+	char* arg = strtok(args, " ");
+	if(arg==NULL){
+		cpu_exec(1);
+		// printf("si 1 OK!\n");
+	}
+	else{
+		int num = atoi(arg);
+		if(strtok(NULL," ") != NULL){
+			printf("Too many arguments!\n");
+			return 0;
+		}
+		cpu_exec(num);
+		// printf("si %d OK!\n", num);
+	}
+	return 0;
 }
 
 void ui_mainloop(int is_batch_mode) {
