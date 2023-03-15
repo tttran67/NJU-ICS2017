@@ -40,6 +40,8 @@ static int cmd_help(char *args);
 
 static int cmd_si(char *args); // single step debug
 
+static int cmd_info(char* args); // print reg info
+
 static struct {
   char *name;
   char *description;
@@ -50,8 +52,8 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
 
   /* TODO: Add more commands */
-  {"si", "Single-step debug", cmd_si}
-
+  {"si", "Single-step debug", cmd_si},
+  {"info", "Print information of reg or watchpoints", cmd_info}
 };
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
@@ -93,6 +95,39 @@ static int cmd_si(char* args){
 		}
 		cpu_exec(num);
 		// printf("si %d OK!\n", num);
+	}
+	return 0;
+}
+
+static int cmd_info(char* args){
+	char* arg = strtok(args, " ");
+	if(arg == NULL){
+		printf("Too few arguments.\n");
+	}
+	else{
+		if(strtok(NULL, " ") != NULL){
+			printf("Too many arguments.\n");
+			return 0;
+		}
+	if(strcmp(arg,"r")==0){
+		printf("eax: 0x%08x.\n", cpu.eax);
+		printf("ecx: 0x%08x.\n", cpu.ecx);
+		printf("edx: 0x%08x.\n", cpu.edx);
+		printf("ebx: 0x%08x.\n", cpu.ebx);
+		printf("esp: 0x%08x.\n", cpu.esp);
+		printf("ebp: 0x%08x.\n", cpu.ebp);
+		printf("esi: 0x%08x.\n", cpu.esi);
+		printf("edi: 0x%08x.\n", cpu.edi);
+		printf("NEMU eflags:\n");
+		printf("ZF:%d\n",cpu.eflags.ZF);
+		printf("SF:%d\n",cpu.eflags.SF);
+		printf("OF:%d\n",cpu.eflags.OF);
+		printf("CF:%d\n",cpu.eflags.CF);
+		printf("IF:%d\n",cpu.eflags.IF);
+	}
+	else if(strcmp(arg,"w")==0){
+		show_wp();
+	}
 	}
 	return 0;
 }
