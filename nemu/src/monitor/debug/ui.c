@@ -128,7 +128,7 @@ static int cmd_info(char* args){
 		printf("IF:%d\n",cpu.eflags.IF);
 	}
 	else if(strcmp(arg,"w")==0){
-		show_wp();
+	//	show_wp();
 	}
 	}
 	return 0;
