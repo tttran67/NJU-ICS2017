@@ -42,6 +42,7 @@ static int cmd_si(char *args); // single step debug
 
 static int cmd_info(char* args); // print reg info
 
+static int cmd_x(char *args); // scan the mem
 static struct {
   char *name;
   char *description;
@@ -53,7 +54,8 @@ static struct {
 
   /* TODO: Add more commands */
   {"si", "Single-step debug", cmd_si},
-  {"info", "Print information of reg or watchpoints", cmd_info}
+  {"info", "Print information of reg or watchpoints", cmd_info},
+  {"x", "Scan the mem", cmd_x}
 };
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
@@ -128,6 +130,39 @@ static int cmd_info(char* args){
 	else if(strcmp(arg,"w")==0){
 		show_wp();
 	}
+	}
+	return 0;
+}
+
+static int cmd_x(char* args){
+	char* arg = strtok(args, " ");
+	if(arg == NULL){
+		printf("Too few arguments!\n");
+	}
+	int num = atoi(arg);
+	arg = strtok(NULL, " ");
+	if(arg == NULL){
+		printf("Too few arguments!\n");
+		return 0;
+	}
+	if(strtok(NULL," ") != NULL){
+		printf("Too many arguments!\n");
+		return 0;
+	}
+	bool success;
+	vaddr_t vaddr = expr(arg, &success);
+	if(!success){
+		printf("Unvalid address!\n");
+		return 0;
+	}
+	for(int i = 0; i < num; i++){
+		uint32_t data = vaddr_read(vaddr + 4 * i, 4);
+		printf("0x%08x ", vaddr + 4 * i);
+		for(int j = 0; j < 3; j++){
+			printf("0x%02x ", data & 0xff);
+			data = data >> 8;
+		}
+		printf("0x%02x\n", data & 0xff);
 	}
 	return 0;
 }
