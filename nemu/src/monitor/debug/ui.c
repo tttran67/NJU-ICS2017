@@ -152,7 +152,7 @@ static int cmd_x(char* args){
 	bool success;
 	vaddr_t vaddr = expr(arg, &success);
 	if(!success){
-		printf("Unvalid address!\n");
+		printf("Invalid address!\n");
 		return 0;
 	}
 	for(int i = 0; i < num; i++){
