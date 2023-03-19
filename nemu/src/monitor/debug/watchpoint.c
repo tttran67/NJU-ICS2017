@@ -103,3 +103,23 @@ void free_wp(int no){
   }
 
 }
+bool check_wp(){
+  WP* curr = head;
+  if(head == NULL) {
+    return false;
+  }
+  else {
+    bool success = false;
+    bool flag = false;
+    while(curr != NULL) {
+      int val = expr(curr->expr, &success);
+      if (val != curr->value) {
+        flag = true;
+        printf("%d:\t%s\tchanges from %d to %d.\n", curr->NO, curr->expr, curr->value, val);
+        curr->value = val;
+      }
+      curr = curr->next;
+    }
+    return flag;
+  }
+}
