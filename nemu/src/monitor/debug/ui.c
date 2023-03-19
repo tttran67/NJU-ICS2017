@@ -46,6 +46,8 @@ static int cmd_x(char *args); // scan the mem
 
 static int cmd_w(char* args); // set watchpoints
 
+static int cmd_d(char* args); // delete watchpoints
+
 static struct {
   char *name;
   char *description;
@@ -59,7 +61,8 @@ static struct {
   {"si", "Single-step debug", cmd_si},
   {"info", "Print information of reg or watchpoints", cmd_info},
   {"x", "Scan the mem", cmd_x},
-  {"w", "Set watchpoints", cmd_w}
+  {"w", "Set watchpoints", cmd_w},
+  {"d", "Delete watchpoints", cmd_d}
 };
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
@@ -193,6 +196,32 @@ static int cmd_w(char* args){
   printf("Set a watchpoint %d on %s.\n", wp->NO, wp->expr);
   return 0;
 
+}
+
+static int cmd_d(char* args) {
+  char* arg = strtok(args, " ");
+  if(arg == NULL) {
+    printf("Too few arguments.\n");
+    return 0;
+  }
+  if(strtok(NULL, " ") != NULL) {
+    printf("Too many arguments.\n");
+    return 0;
+  }
+  for(int i = 0; i < strlen(arg); i++) {
+    if (arg[i] > '9' || arg[i] < '0') {
+      printf("Invalid expression.\n");
+      return 0;
+    }
+  }
+  int n = atoi(arg);
+  if (n >= 32) {
+    printf("Only 32 watchpoints(No: 0-31) provided.\n");
+    return 0;
+  }
+  free_wp(n);
+  printf("Successfully delete watchpoint %d.\n", n);
+  return 0;
 }
 void ui_mainloop(int is_batch_mode) {
   if (is_batch_mode) {
