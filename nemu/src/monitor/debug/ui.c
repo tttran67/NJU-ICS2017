@@ -43,6 +43,9 @@ static int cmd_si(char *args); // single step debug
 static int cmd_info(char* args); // print reg info
 
 static int cmd_x(char *args); // scan the mem
+
+static int cmd_w(char* args); // set watchpoints
+
 static struct {
   char *name;
   char *description;
@@ -55,7 +58,8 @@ static struct {
   /* TODO: Add more commands */
   {"si", "Single-step debug", cmd_si},
   {"info", "Print information of reg or watchpoints", cmd_info},
-  {"x", "Scan the mem", cmd_x}
+  {"x", "Scan the mem", cmd_x},
+  {"w", "Set watchpoints", cmd_w}
 };
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
@@ -167,6 +171,29 @@ static int cmd_x(char* args){
 	return 0;
 }
 
+static int cmd_w(char* args){
+  char* arg = strtok(args, " ");
+  if (arg == NULL) {
+    printf("Too few arguments!\n");
+    return 0;
+  }
+  char* sub = strtok(NULL, " ");
+  while (sub != NULL) {
+    strcat(arg, sub);
+    sub = strtok(NULL, " ");
+  }
+  bool success;
+  WP* wp = new_wp();
+  // printf("%d\n", wp->NO);
+  wp->expr = (char*)malloc(strlen(arg)*sizeof(char));
+  memset(wp->expr, 0, strlen(arg));
+  strcpy(wp->expr, arg);
+  // printf("%s\n", wp->expr);
+  wp->value = expr(arg, &success);
+  printf("Set a watchpoint %d on %s.\n", wp->NO, wp->expr);
+  return 0;
+
+}
 void ui_mainloop(int is_batch_mode) {
   if (is_batch_mode) {
     cmd_c(NULL);
