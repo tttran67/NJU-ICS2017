@@ -359,7 +359,7 @@ int find_operator(int p, int q) {
   free(stack);
   return loc;
 }
-int evaluate(int p, int q) {
+int eval(int p, int q) {
   if (p > q) {
     printf("Error: bad expression!\n");
     assert(0);
@@ -404,17 +404,14 @@ int evaluate(int p, int q) {
     // printf("token_idx: %d, value: %s.\n", p, tokens[p].str);
     return res;
   }
-  else if (check_parentheses(p, q)) {
+  else if (check_parentheses(p, q) == true) {
 	// just throw away the parentheses
-    return evaluate(p + 1, q - 1);
+    return eval(p + 1, q - 1);
   }
   else {
-    // printf("evaluate here\n");
-    // printf("%d, %d\n", p, q);
     int op = find_operator(p, q);
-    // printf("%d\n", op);
-    int val1 = evaluate(p, op - 1);
-    int val2 = evaluate(op + 1, q);
+    int val1 = eval(p, op - 1);
+    int val2 = eval(op + 1, q);
     switch (tokens[op].type) {
       case TK_ADD: return val1 + val2;
       case TK_MIN: return val1 - val2;
@@ -478,6 +475,6 @@ uint32_t expr(char *e, bool *success) {
     }
   }
   int p = 0, q = nr_token - 1;
-  int value = evaluate(p, q);
+  int value = eval(p, q);
   return value;
 }
