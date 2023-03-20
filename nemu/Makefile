@@ -42,6 +42,14 @@ $(BINARY): $(OBJS)
 	@echo + LD $@
 	@$(LD) -O2 -o $@ $^ -lSDL2 -lreadline
 
+# Command for count                                    
+COUNT_L := $(shell  find . -name "*.h" -or -name "*.c" | xargs grep -Ev "^$$" | wc -l)  
+COUNT_ADD := $(shell expr $(COUNT_L) - 2850)  
+
+count:                                  
+	@echo Totally $(COUNT_L) lines of code in nemu of this branch except empty line                                         
+	@echo Totally $(COUNT_ADD) lines added into the frame code 
+
 run: $(BINARY)
 	$(call git_commit, "run")
 	$(NEMU_EXEC)
