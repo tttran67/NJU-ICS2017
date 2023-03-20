@@ -256,17 +256,15 @@ static bool make_token(char *e) {
   return true;
 }
 bool check_parentheses(int p, int q) {
-  // printf("p:%d, q:%d, tokens:%d\n", p, q, nr_token);
-  // printf("tokens[%d].type: %d\n", p, tokens[p].type);
-  // printf("tokens[%d].type: %d\n", q, tokens[q].type);
+  // assert and ret false differs - refer to page 29 of instruction book
   if (tokens[p].type != TK_LP || tokens[q].type != TK_RP) {
-    // printf("check_parentheses failed\n");
+    printf("check parentheses failed in part 1\n");
+	assert(0);
     return false;
   }
   int t = p + 1;
   int count = 0;
   while(t < q) {
-    // printf("token_location: %d, token_value: %s.\n", t, tokens[t].str);
     if (tokens[t].type == TK_LP) {
       count++;
     }
@@ -279,7 +277,8 @@ bool check_parentheses(int p, int q) {
     t++;
   }
   if (count != 0) {
-    return false;
+	  printf("check_parentheses failed in part 2\n");
+	  return false;
   }
   return true;
 }
@@ -323,7 +322,6 @@ bool compare_priority(int op1, int op2){
   return op1 > op2;
 }
 int find_operator(int p, int q) {
-  // printf("find_operator from %d to %d\n", p, q);
   int len = (q - p) + 1;
   int* stack = (int*) malloc(sizeof(int)*len);
   memset(stack, 0, sizeof(int)*len);
@@ -331,7 +329,6 @@ int find_operator(int p, int q) {
   int count = 0;
   int loc = p;
   int operand = 0;
-  // restriction: count < len
   while(t <= q && count <= len) {
     if (tokens[t].type == TK_LP) {
       t = find_right_parenthese(t+1, q);
@@ -409,7 +406,10 @@ int eval(int p, int q) {
     return eval(p + 1, q - 1);
   }
   else {
-    int op = find_operator(p, q);
+    // find the dominant operator
+	// first get the value of 2 sub expr
+	// second cal the two sub exprs
+    int op = find_operator(p, q);// the position of dominant operator in the token expression
     int val1 = eval(p, op - 1);
     int val2 = eval(op + 1, q);
     switch (tokens[op].type) {
