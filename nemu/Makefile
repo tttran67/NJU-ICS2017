@@ -43,8 +43,8 @@ $(BINARY): $(OBJS)
 	@$(LD) -O2 -o $@ $^ -lSDL2 -lreadline
 
 # Command for count                                    
-COUNT_L := $(shell find . -name "*[.h|.c]" | xargs grep -Ev "^$$" | wc -l)  
-COUNT_ADD := $(shell expr $(COUNT_L) - 2850)  
+COUNT_L := $(shell find . -name "*.c" -or -name "*.h" | xargs grep -Ev "^$$" | wc -l)  
+COUNT_ADD := $(shell expr $(COUNT_L) - 2817)  
 
 count:                                  
 	@echo Totally $(COUNT_L) lines of code in nemu of this branch except empty line                                         
