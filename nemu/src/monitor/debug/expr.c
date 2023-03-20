@@ -362,7 +362,7 @@ int find_operator(int p, int q) {
 int evaluate(int p, int q) {
   if (p > q) {
     printf("Error: bad expression!\n");
-    return 0;
+    assert(0);
   }
   else if (p == q) {
     int res = 0;
@@ -405,7 +405,7 @@ int evaluate(int p, int q) {
     return res;
   }
   else if (check_parentheses(p, q)) {
-    // printf("check_parenthese = true\n");
+	// just throw away the parentheses
     return evaluate(p + 1, q - 1);
   }
   else {
