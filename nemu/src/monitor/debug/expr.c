@@ -299,7 +299,8 @@ int find_right_parenthese(int p, int q) {
   }
   if (tmp == q && tokens[q].type != TK_RP) {
     printf("impossible to reach here! Incompatible parentheses.\n");
-    return -1;
+    assert(0);
+	return -1;
   }
   else {
     return tmp;
