@@ -258,8 +258,9 @@ static bool make_token(char *e) {
 bool check_parentheses(int p, int q) {
   // assert and ret false differs - refer to page 29 of instruction book
   if (tokens[p].type != TK_LP || tokens[q].type != TK_RP) {
-    printf("check parentheses failed in part 1\n");
-	assert(0);
+ //   printf("check parentheses failed in part 1\n");
+//	assert(0);
+//	2 * 3 will enter this part
     return false;
   }
   int t = p + 1;
