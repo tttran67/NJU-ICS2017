@@ -94,7 +94,7 @@ static bool make_token(char *e) {
          * of tokens, some extra actions should be performed.
          */
         if (substr_len > 31) {
-          printf("Error: too long for a token.\n");
+          printf("Error: the token is too long.\n");
           assert(0);
         }
         switch (rules[i].token_type) {
@@ -361,7 +361,7 @@ int find_operator(int p, int q) {
 }
 int evaluate(int p, int q) {
   if (p > q) {
-    // printf("Error: bad expression!\n");
+    printf("Error: bad expression!\n");
     return 0;
   }
   else if (p == q) {
