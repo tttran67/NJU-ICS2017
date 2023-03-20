@@ -43,7 +43,7 @@ $(BINARY): $(OBJS)
 	@$(LD) -O2 -o $@ $^ -lSDL2 -lreadline
 
 # Command for count                                    
-COUNT_L := $(shell  find . -name "*.h" -or -name "*.c" | xargs grep -Ev "^$$" | wc -l)  
+COUNT_L := $(shell find . -name "*[.h|.c]" | xargs grep -Ev "^$$" | wc -l)  
 COUNT_ADD := $(shell expr $(COUNT_L) - 2850)  
 
 count:                                  
