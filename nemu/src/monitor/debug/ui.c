@@ -94,16 +94,19 @@ static int cmd_si(char* args){
 	char* arg = strtok(args, " ");
 	if(arg==NULL){
 		cpu_exec(1);
-		// printf("si 1 OK!\n");
 	}
 	else{
-		int num = atoi(arg);
+		bool success;
+		int num = expr(arg, &success);
+		if(!success){
+			printf("Invalid si num.\n");
+			return 0;
+		}
 		if(strtok(NULL," ") != NULL){
 			printf("Too many arguments!\n");
 			return 0;
 		}
 		cpu_exec(num);
-		// printf("si %d OK!\n", num);
 	}
 	return 0;
 }
@@ -146,7 +149,12 @@ static int cmd_x(char* args){
 	if(arg == NULL){
 		printf("Too few arguments!\n");
 	}
-	int num = atoi(arg);
+	bool success;
+	int num = expr(arg, &success);
+	if(!success){
+		printf("Invalid cmd_x num.\n");
+		return 0;
+	}
 	arg = strtok(NULL, " ");
 	if(arg == NULL){
 		printf("Too few arguments!\n");
@@ -156,10 +164,9 @@ static int cmd_x(char* args){
 		printf("Too many arguments!\n");
 		return 0;
 	}
-	bool success;
 	vaddr_t vaddr = expr(arg, &success);
 	if(!success){
-		printf("Invalid address!\n");
+		printf("Invalid cmd_x address!\n");
 		return 0;
 	}
 	for(int i = 0; i < num; i++){
