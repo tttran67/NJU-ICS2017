@@ -337,7 +337,8 @@ int find_operator(int p, int q) {
     }
     else if (tokens[t].type == TK_RP) {
       printf("impossible to reach here! RP should have already been eliminated.\n");
-    }
+	  assert(0);
+   	}
     else if(tokens[t].type != TK_DEC && tokens[t].type != TK_HEX 
     && tokens[t].type != TK_REG && tokens[t].type != TK_NOTYPE) {
       if(count == 0) {
