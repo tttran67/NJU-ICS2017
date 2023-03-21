@@ -326,8 +326,8 @@ bool compare_priority(int op1, int op2){
 int find_operator(int p, int q) {
   if(debug) printf("find_operator\n");
   int len = (q - p) + 1;
-  int* stack = (int*) malloc(sizeof(int)*len);
-  memset(stack, 0, sizeof(int)*len);
+ // int* stack = (int*) malloc(sizeof(int)*len);
+ //  memset(stack, 0, sizeof(int)*len);
   int t = p;
   int count = 0;
   int loc = p;
@@ -343,7 +343,7 @@ int find_operator(int p, int q) {
     else if(tokens[t].type != TK_DEC && tokens[t].type != TK_HEX 
     && tokens[t].type != TK_REG && tokens[t].type != TK_NOTYPE) {
       if(count == 0) {
-        stack[count] = tokens[t].type;
+      //  stack[count] = tokens[t].type;
         loc = t;
         count++;
         operand = tokens[t].type;
@@ -357,7 +357,7 @@ int find_operator(int p, int q) {
 	}
     t++;
   }
-  free(stack);
+ // free(stack);
   return loc;
 }
 int eval(int p, int q) {
