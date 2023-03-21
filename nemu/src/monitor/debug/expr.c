@@ -415,7 +415,8 @@ int eval(int p, int q) {
 	// first get the value of 2 sub expr
 	// second cal the two sub exprs
     int op = find_operator(p, q);// the position of dominant operator in the token expression
-    int val1 = eval(p, op - 1);
+    printf("%d-----\n",op);
+   	int val1 = eval(p, op - 1);
     int val2 = eval(op + 1, q);
     switch (tokens[op].type) {
       case TK_ADD: return val1 + val2;
