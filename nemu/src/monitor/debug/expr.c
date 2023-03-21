@@ -16,7 +16,7 @@ enum {
   TK_NOT, TK_POI, TK_NEG,
   TK_LP, TK_RP
 };
-
+bool debug = 1;
 static struct rule {
   char *regex;
   int token_type;
@@ -256,10 +256,9 @@ static bool make_token(char *e) {
   return true;
 }
 bool check_parentheses(int p, int q) {
+  if(debug) printf("check_parentheses\n");
   // assert and ret false differs - refer to page 29 of instruction book
   if (tokens[p].type != TK_LP || tokens[q].type != TK_RP) {
- //   printf("check parentheses failed in part 1\n");
-//	assert(0);
 //	2 * 3 will enter this part
     return false;
   }
@@ -284,7 +283,7 @@ bool check_parentheses(int p, int q) {
   return true;
 }
 int find_right_parenthese(int p, int q) {
-  // printf("right_parenthese\n");
+  if(debug) printf("find_right_parenthese\n");
   int tmp = p;
   int right = q;
   while(tmp < q && tokens[tmp].type != TK_RP) {
@@ -308,6 +307,7 @@ int find_right_parenthese(int p, int q) {
 }
 // true => op1 > op2, false => op1 < op2
 bool compare_priority(int op1, int op2){
+  if(debug) printf("compare_priority\n");
   if ((op1 == TK_EQ && op2 == TK_NEQ) || (op1 == TK_NEQ && op2 == TK_EQ)) {
     return true;
   }
@@ -324,6 +324,7 @@ bool compare_priority(int op1, int op2){
   return op1 > op2;
 }
 int find_operator(int p, int q) {
+  if(debug) printf("find_operator\n");
   int len = (q - p) + 1;
   int* stack = (int*) malloc(sizeof(int)*len);
   memset(stack, 0, sizeof(int)*len);
@@ -360,6 +361,7 @@ int find_operator(int p, int q) {
   return loc;
 }
 int eval(int p, int q) {
+	if(debug) printf("eval\n");
   if (p > q) {
     printf("Error: bad expression!\n");
     assert(0);
@@ -462,6 +464,7 @@ int eval(int p, int q) {
 }
 
 uint32_t expr(char *e, bool *success) {
+	if(debug) printf("expr\n");
   if (!make_token(e)) {
     *success = false;
     return 0;
