@@ -16,7 +16,7 @@ enum {
   TK_NOT, TK_POI, TK_NEG,
   TK_LP, TK_RP
 };
-bool debug = 1;
+bool debug = 0;
 static struct rule {
   char *regex;
   int token_type;
@@ -417,7 +417,6 @@ int eval(int p, int q) {
 	// first get the value of 2 sub expr
 	// second cal the two sub exprs
     int op = find_operator(p, q);// the position of dominant operator in the token expression
-    printf("%d-----\n",op);
    	int val1 = eval(p, op - 1);
     int val2 = eval(op + 1, q);
     switch (tokens[op].type) {
