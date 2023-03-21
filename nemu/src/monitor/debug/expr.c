@@ -363,8 +363,10 @@ int find_operator(int p, int q) {
 int eval(int p, int q) {
 	if(debug) printf("eval\n");
   if (p > q) {
-    printf("Error: bad expression!\n");
-    assert(0);
+   // printf("Error: bad expression!\n");
+   // assert(0);
+   return 0;
+   // it's tricky that 0 implicates cases like -1
   }
   else if (p == q) {
     int res = 0;
