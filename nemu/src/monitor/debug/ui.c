@@ -208,13 +208,8 @@ static int cmd_d(char* args) {
     printf("Too many arguments.\n");
     return 0;
   }
-  for(int i = 0; i < strlen(arg); i++) {
-    if (arg[i] > '9' || arg[i] < '0') {
-      printf("Invalid expression.\n");
-      return 0;
-    }
-  }
-  int n = atoi(arg);
+  bool success;
+  int n = expr(arg, &success);
   if (n >= 32) {
     printf("Only 32 watchpoints(No: 0-31) provided.\n");
     return 0;
