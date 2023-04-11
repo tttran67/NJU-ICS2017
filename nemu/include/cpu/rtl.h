@@ -3,7 +3,7 @@
 
 #include "nemu.h"
 
-extern rtlreg_t t0, t1, t2, t3;
+extern rtlreg_t t0, t1, t2, t3, s0, s1;
 extern const rtlreg_t tzero;
 
 /* RTL basic instructions */
@@ -126,59 +126,100 @@ make_rtl_setget_eflags(SF)
 
 static inline void rtl_mv(rtlreg_t* dest, const rtlreg_t *src1) {
   // dest <- src1
-  TODO();
+//  TODO();
+	*dest = *src1;
 }
 
 static inline void rtl_not(rtlreg_t* dest) {
   // dest <- ~dest
-  TODO();
+ // TODO();
+	*dest = ~(*dest);
 }
 
 static inline void rtl_sext(rtlreg_t* dest, const rtlreg_t* src1, int width) {
   // dest <- signext(src1[(width * 8 - 1) .. 0])
-  TODO();
+//  TODO();
+  rtl_li(&t1, 32 - width * 8); // get how many bits to shift
+  rtl_shl(dest, src1, &t1);
+  rtl_sar(dest, dest, &t1);
 }
 
 static inline void rtl_push(const rtlreg_t* src1) {
   // esp <- esp - 4
   // M[esp] <- src1
-  TODO();
+//  TODO();
+	rtl_subi(&cpu.esp, &cpu.esp, 4);
+	rtl_sm(&cpu.esp, 4, src1);
 }
 
 static inline void rtl_pop(rtlreg_t* dest) {
   // dest <- M[esp]
   // esp <- esp + 4
-  TODO();
+  rtl_lm(dest, &cpu.esp, 4);
+  rtl_addi(&cpu.esp, &cpu.esp, 4);
+ // TODO();
 }
 
 static inline void rtl_eq0(rtlreg_t* dest, const rtlreg_t* src1) {
   // dest <- (src1 == 0 ? 1 : 0)
-  TODO();
+ // TODO();
+	*dest = (*src1 == 0) ? 1 : 0;
 }
 
 static inline void rtl_eqi(rtlreg_t* dest, const rtlreg_t* src1, int imm) {
   // dest <- (src1 == imm ? 1 : 0)
-  TODO();
+ // TODO();
+	*dest = (*src1 == imm) ? 1 : 0;
 }
 
 static inline void rtl_neq0(rtlreg_t* dest, const rtlreg_t* src1) {
   // dest <- (src1 != 0 ? 1 : 0)
-  TODO();
+//  TODO();
+	*dest = (*src1 != 0) ? 1 : 0;
 }
 
 static inline void rtl_msb(rtlreg_t* dest, const rtlreg_t* src1, int width) {
   // dest <- src1[width * 8 - 1]
-  TODO();
+//  TODO();
+	rtl_shri(dest, src1, width * 8 - 1);
+  // TODO-ADD
+  rtl_andi(dest, dest, 0x1);
 }
 
 static inline void rtl_update_ZF(const rtlreg_t* result, int width) {
   // eflags.ZF <- is_zero(result[width * 8 - 1 .. 0])
-  TODO();
+//  TODO();
+  uint32_t mask = 0;
+  switch(width){
+    case 1: {
+      mask = 0xff;
+      break;
+    }
+    case 2: {
+      mask = 0xffff;
+      break;
+    }
+    case 4: {
+      mask = 0xffffffff;
+      break;
+    }
+    default:
+      assert(0);
+  }
+  if ((*result & mask) == 0) {
+    s0 = 1;
+  }
+  else {
+    s0 = 0;
+  }
+  rtl_set_ZF(&s0);
 }
 
 static inline void rtl_update_SF(const rtlreg_t* result, int width) {
   // eflags.SF <- is_sign(result[width * 8 - 1 .. 0])
-  TODO();
+//  TODO();
+  rtl_msb(&s0, result, width);
+  rtl_set_SF(&s0);
 }
 
 static inline void rtl_update_ZFSF(const rtlreg_t* result, int width) {
