@@ -200,7 +200,7 @@ void difftest_step(uint32_t eip) {
   }
   if (r.esi != cpu.esi) {
     diff = true;
-    printf("eip diff!\n");
+    printf("esi diff!\n");
     printf("QEMU: 0x%08x\n", r.esi);
     printf("NEMU: 0x%08x\n", cpu.esi);
   }
