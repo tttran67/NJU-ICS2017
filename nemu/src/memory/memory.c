@@ -20,9 +20,17 @@ void paddr_write(paddr_t addr, int len, uint32_t data) {
 }
 
 uint32_t vaddr_read(vaddr_t addr, int len) {
-  return paddr_read(addr, len);
+  int map = is_mmio(addr);
+  if(map != -1) {
+    return mmio_read(addr, len, map);
+  }
+  else	return paddr_read(addr, len);
 }
 
 void vaddr_write(vaddr_t addr, int len, uint32_t data) {
-  paddr_write(addr, len, data);
+  int map = is_mmio(addr);
+  if (map != -1) {
+    mmio_write(addr, len, data, map);
+  }
+  else	paddr_write(addr, len, data);
 }
