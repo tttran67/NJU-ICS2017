@@ -21,6 +21,10 @@ make_EHelper(nop);
 make_EHelper(inv);
 make_EHelper(nemu_trap);
 
+// system.c
+make_EHelper(in);
+make_EHelper(out);
+
 // control.c
 make_EHelper(jmp);
 make_EHelper(jmp_rm);
