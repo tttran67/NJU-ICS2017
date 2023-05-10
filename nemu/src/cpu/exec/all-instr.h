@@ -22,6 +22,9 @@ make_EHelper(inv);
 make_EHelper(nemu_trap);
 
 // system.c
+make_EHelper(lidt);
+make_EHelper(iret);
+make_EHelper(int);
 make_EHelper(in);
 make_EHelper(out);
 make_EHelper(mov_cr2r);
