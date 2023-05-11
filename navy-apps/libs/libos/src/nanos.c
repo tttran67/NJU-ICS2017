@@ -1,5 +1,6 @@
 #include <unistd.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <assert.h>
@@ -18,8 +19,7 @@ int _syscall_(int type, uintptr_t a0, uintptr_t a1, uintptr_t a2){
 }
 
 void _exit(int status) {
-  _syscall_(SYS_exit, status, 0, 0);
-}
+(uintptr_t)}
 
 int _open(const char *path, int flags, mode_t mode) {
   _exit(SYS_open);
@@ -29,7 +29,15 @@ int _write(int fd, void *buf, size_t count){
   _syscall_(SYS_write, (uintptr_t)fd, (uintptr_t)buf, (uintptr_t)count);
 }
 
+extern char _end;
+static intptr_t brk = (intptr_t)&_end;
 void *_sbrk(intptr_t increment){
+  intptr_t old_brk = brk;
+  intptr_t new_brk = old_brk + increment;
+  if (_syscall_(SYS_brk, (uintptr_t)new_brk, 0, 0) == 0) {
+    brk = new_brk;
+    return (void *)old_brk;
+  }
   return (void *)-1;
 }
 
