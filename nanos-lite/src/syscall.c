@@ -2,6 +2,8 @@
 #include "syscall.h"
 #include "am.h"
 extern ssize_t fs_write(int fd, const void* buf, size_t len);
+int mm_brk(uint32_t new_brk);
+
 static inline _RegSet* sys_none(_RegSet *r) {
   SYSCALL_ARG1(r) = 1;
   return NULL;
@@ -35,6 +37,9 @@ _RegSet* do_syscall(_RegSet *r) {
     case SYS_exit:
         _halt(a[1]);
         break;
+    case SYS_brk:
+      res = mm_brk((uint32_t)SYSCALL_ARG2(r));
+      break;
     case SYS_write: 
         return sys_fwrite(r);
     default: panic("Unhandled syscall ID = %d", a[0]);
