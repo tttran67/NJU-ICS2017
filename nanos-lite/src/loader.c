@@ -16,28 +16,10 @@ int fs_close(int fd);
 
 
 uintptr_t loader(_Protect *as, const char *filename) {
-  printf("in loader\n");
-  ramdisk_read(DEFAULT_ENTRY, 0, get_ramdisk_size());
-  // raw program loader
-  // size_t len = get_ramdisk_size();
-  // ramdisk_read(DEFAULT_ENTRY, 0, len);
-  // return (uintptr_t)DEFAULT_ENTRY;
-  // raw filesystem loader
-  // Log("filename: %s.", filename);
-  // int fd = fs_open(filename, 0, 0);
-  // printf("fd to open = %d\n", fd);
-  // fs_read(fd, DEFAULT_ENTRY, fs_filesz(fd));
-  // int size = fs_filesz(fd);
-  // void *pa, *va = DEFAULT_ENTRY;
-  // Log("filename: %s, filesize: %d.", filename, size);
-  // while(size > 0) {
-  //   pa = new_page();
-  //   _map(as, va, pa);
-  //   size_t len = size >= PGSIZE ? PGSIZE:size;
-  //   fs_read(fd, pa, len);
-  //   va += PGSIZE;
-  //   size -= PGSIZE;
-  // }
-  // fs_close(fd);
+  // ramdisk_read(DEFAULT_ENTRY, 0, get_ramdisk_size());
+  int fd = fs_open(filename, 0, 0);
+  printf("fd to open = %d\n", fd);
+  fs_read(fd, DEFAULT_ENTRY, fs_filesz(fd));
+  fs_close(fd);
   return (uintptr_t)DEFAULT_ENTRY;
 }
