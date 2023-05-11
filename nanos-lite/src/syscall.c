@@ -1,7 +1,7 @@
 #include "common.h"
 #include "syscall.h"
 #include "am.h"
-
+extern ssize_t fs_write(int fd, const void* buf, size_t len);
 static inline _RegSet* sys_none(_RegSet *r) {
   SYSCALL_ARG1(r) = 1;
   return NULL;
@@ -12,6 +12,14 @@ static inline _RegSet* sys_exit(_RegSet *r) {
   return NULL;
 }
 
+static inline _RegSet* sys_fwrite(_RegSet* r) {
+  int fd = (int)SYSCALL_ARG2(r);
+  void* buf = (void*)SYSCALL_ARG3(r);
+  size_t len = (size_t)SYSCALL_ARG4(r);
+  size_t res = fs_write(fd, buf, len);
+  SYSCALL_ARG1(r) = res;
+  return NULL;
+}
 _RegSet* do_syscall(_RegSet *r) {
   uintptr_t a[4];
   uintptr_t res = -1;
@@ -27,6 +35,8 @@ _RegSet* do_syscall(_RegSet *r) {
     case SYS_exit:
         _halt(a[1]);
         break;
+    case SYS_write: 
+        return sys_fwrite(r);
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
   
