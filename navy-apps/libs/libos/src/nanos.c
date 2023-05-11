@@ -19,7 +19,8 @@ int _syscall_(int type, uintptr_t a0, uintptr_t a1, uintptr_t a2){
 }
 
 void _exit(int status) {
-(uintptr_t)}
+  _syscall_(SYS_exit, status, 0, 0);
+}
 
 int _open(const char *path, int flags, mode_t mode) {
   _exit(SYS_open);
