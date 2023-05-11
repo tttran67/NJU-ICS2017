@@ -38,7 +38,7 @@ _RegSet* do_syscall(_RegSet *r) {
         _halt(a[1]);
         break;
     case SYS_brk:
-      res = 0;
+      res = 0;//【pyt】
       break;
     case SYS_write: 
         return sys_fwrite(r);
