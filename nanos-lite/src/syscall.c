@@ -1,27 +1,14 @@
 #include "common.h"
 #include "syscall.h"
 #include "am.h"
+
 extern ssize_t fs_write(int fd, const void* buf, size_t len);
-int mm_brk(uint32_t new_brk);
+extern ssize_t fs_read(int fd, void* buf, size_t len);
+extern size_t fs_filesz(int fd);
+extern int fs_open(const char* pathname, int flags, int mode);
+extern int fs_close(int fd);
+extern off_t fs_lseek(int fd, off_t offset, int whence);
 
-static inline _RegSet* sys_none(_RegSet *r) {
-  SYSCALL_ARG1(r) = 1;
-  return NULL;
-}
-
-static inline _RegSet* sys_exit(_RegSet *r) {
-  _halt(SYSCALL_ARG2(r));
-  return NULL;
-}
-
-static inline _RegSet* sys_fwrite(_RegSet* r) {
-  int fd = (int)SYSCALL_ARG2(r);
-  void* buf = (void*)SYSCALL_ARG3(r);
-  size_t len = (size_t)SYSCALL_ARG4(r);
-  size_t res = fs_write(fd, buf, len);
-  SYSCALL_ARG1(r) = res;
-  return NULL;
-}
 _RegSet* do_syscall(_RegSet *r) {
   uintptr_t a[4];
   uintptr_t res = -1;
@@ -41,7 +28,20 @@ _RegSet* do_syscall(_RegSet *r) {
       res = 0;//【pyt】
       break;
     case SYS_write: 
-        return sys_fwrite(r);
+      res = fs_write(a[1], (void*)a[2], a[3]);
+      break;//【pyt】
+    case SYS_read:
+      res = fs_read(a[1], (uint8_t*)a[2], a[3]);
+      break;//【pyt】
+    case SYS_open:
+      res = fs_open((char*)a[1], a[2], a[3]);
+      break;//【pyt】
+    case SYS_close:
+      res = fs_close(a[1]);
+      break;//【pyt】
+    case SYS_lseek:
+        res = fs_lseek(a[1], a[2], a[3]);
+        break;//【pyt】
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
   

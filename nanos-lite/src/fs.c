@@ -24,8 +24,8 @@ static Finfo file_table[] __attribute__((used)) = {
 extern void ramdisk_read(void *buf, off_t offset, size_t len);
 extern void ramdisk_write(const void *buf, off_t offset, size_t len);
 extern _Screen _screen;
-void dispinfo_read(void *buf, off_t offset, size_t len);
-void fb_write(const void *buf, off_t offset, size_t len);
+extern void dispinfo_read(void *buf, off_t offset, size_t len);
+extern void fb_write(const void *buf, off_t offset, size_t len);
 extern size_t events_read(void *buf, size_t len);
 
 void init_fs() {
@@ -196,3 +196,29 @@ size_t fs_write(int fd, const void* buf, size_t len) {
   }
   return len;
 }
+
+off_t fs_lseek(int fd, off_t offset, int whence)
+{
+  off_t res = 01;
+  switch(whence)
+  {
+    case SEEK_SET:
+        if(offset >= 0 && offset <= file_table[fd].size){
+          file_table[fd].open_offset = offset;
+          res = file_table[fd].open_offset = offset;
+        }
+        break;
+    case SEEK_CUR:
+        if((offset + file_table[fd].open_offset >= 0) && (offset + file_table[fd].open_offset <= file_table[fd].size))
+        {
+          file_table[fd].open_offset += offset;
+          res = file_table[fd].open_offset;
+        }
+        break;
+    case SEEK_END:
+        file_table[fd].open_offset = file_table[fd].size + offset;
+        res = file_table[fd].open_offset;
+        break;
+  }
+  return res;
+}//【pyt】
