@@ -1,5 +1,4 @@
 #include "fs.h"
-bool debug4fs = 1;
 typedef struct {
   char *name;
   size_t size;
@@ -30,17 +29,14 @@ extern size_t events_read(void *buf, size_t len);
 
 void init_fs() {
   // TODO: initialize the size of /dev/fb
-  if(debug4fs) printf("init_fs\n");
   file_table[FD_FB].size = _screen.height * _screen.width * 4;
 }
 
 size_t fs_filesz(int fd){
-  if(debug4fs) printf("fs_filesz\n");
   return file_table[fd].size;
 }
 
 int fs_open(const char* pathname, int flags, int mode) {
-  if(debug4fs) printf("fs_open\n");
   printf("NR_FILES = %d\n", NR_FILES);
   printf("pathname = %s\n", pathname);
   for(int i = 0; i < NR_FILES; i++) {
@@ -57,12 +53,10 @@ int fs_open(const char* pathname, int flags, int mode) {
 }
 
 int fs_close(int fd) {
-  if(debug4fs) printf("fs_close\n");
   return 0;
 }
 
 size_t fs_read(int fd, void* buf, size_t len) {
-  if(debug4fs) printf("fs_read\n");
   // size? offset? <=> len
   // int offset = file_table[fd].disk_offset + file_table[fd].open_offset;
   // switch(fd){
